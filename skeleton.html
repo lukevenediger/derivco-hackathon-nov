@@ -121,7 +121,7 @@
         console.log("user Lat : " + userLatLong.lat);
         console.log("user Lng : " + userLatLong.lng);
         console.log(emojiString);
-        formPostForSmark(userLatLong.lat,userLatLong.lng,  emojiString)
+        formPostTest2(userLatLong.lat,userLatLong.lng,  emojiString)
 
         }
         //submit users smark details
@@ -136,7 +136,20 @@
         console.log("northEastLng : " + northEastLng);
 
         }
+        formPostTest2(userLat,userLong,emojiString){
+        var dataObject = {latitude: userLat , longitude: userLong, emoji: emojiString }
+        $.ajax({
+        url: 'http://localhost:9000/like',
+        type: 'post',
+        dataType: 'json',
+        contentType: 'application/json',
+        success: function (data) {
+        M.toast({html: '<span>Thanks for SMARKING</span>'})
+        },
+        data: JSON.stringify(dataObject)
+        });
 
+        }
 
         function formPostForSmark(userLat,userLong,emojiString){
         var dataObject = {latitude: userLat , longitude: userLong, emoji: emojiString }
@@ -154,12 +167,11 @@
         console.log(settings);
         $.ajax(settings).done(function (response) {
         M.toast({html: '<span>Thanks for SMARKING</span>'})
-
         console.log(response);
         });
 
 
-      
+
         }
 
     </script>
