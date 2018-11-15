@@ -36,21 +36,22 @@
         <a class="btn-floating btn-large blue pulse" id='menu'>
             <i class=" large fas fa-plus tooltipped" data-position="left" data-tooltip="Smark this place"></i>
         </a>
-        <ul>            
-            <li><a class="btn-floating blue tooltipped" data-position="left" data-tooltip="Like" onclick="onFabClick('LIKE')"><i class=" far fa-thumbs-up "></i></i></a></li>
+        <ul>      
+            <li><a class="btn-floating grey  tooltipped" data-position="left" data-tooltip="Sad" onclick="onFabClick('SAD')">   <i class="far fa-sad-tear"></i></a></li>
+            <li><a class="btn-floating red  tooltipped" data-position="left" data-tooltip="Angry" onclick="onFabClick('ANGRY')"> <i class="far fa-angry"></i></a></li>
             <li><a class="btn-floating red tooltipped" data-position="left" data-tooltip="Love" onclick="onFabClick('LOVE')"><i class="far fa-heart"></i></i></a></li>
             <li><a class="btn-floating yellow  tooltipped" data-position="left" data-tooltip="Ha Ha" onclick="onFabClick('HAHA')"><i class="far fa-laugh-beam"></i></a></li>
             <li><a class="btn-floating green  tooltipped" data-position="left" data-tooltip="Yay" onclick="onFabClick('YAY')"><i class="far fa-smile-beam"></i></a></li>
             <li><a class="btn-floating brown  tooltipped" data-position="left" data-tooltip="Wow" onclick="onFabClick('WOW')">  <i class="far fa-surprise"></i></a></li>
-            <li><a class="btn-floating grey  tooltipped" data-position="left" data-tooltip="Sad" onclick="onFabClick('SAD')">   <i class="far fa-sad-tear"></i></a></li>
-            <li><a class="btn-floating red  tooltipped" data-position="left" data-tooltip="Angry" onclick="onFabClick('ANGRY')"> <i class="far fa-angry"></i></a></li>
+            <li><a class="btn-floating blue tooltipped" data-position="left" data-tooltip="Like" onclick="onFabClick('LIKE')"><i class=" far fa-thumbs-up "></i></i></a></li>
+
         </ul>
     </div>
 
     <div class="tap-target" data-target="menu">
         <div class="tap-target-content white-text">
             <h5>Welcome to SMARK</h5>
-            <p>Add an Emotion to any place, anywhere!!</p>
+            <p>Add an "Emotion" to any place, anywhere!!</p>
         </div>
     </div>
     <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
@@ -81,7 +82,7 @@
 
 
         //initilize shitty map
-        var map = L.map('mapid').fitWorld();
+        var map = L.map('mapid')
 
         //gobal var to set users cords... not the best idea
         var userLatLong;
@@ -104,20 +105,59 @@
         console.log(radius);
         L.marker(e.latlng).addTo(map)
         .bindPopup("You are within " + radius + " meters from this point").openPopup();
-
         L.circle(e.latlng, radius).addTo(map);
         }
         //on event location found call onLocationFound
 
         map.on('locationfound', onLocationFound);
 
-
         function onFabClick(emojiString){
-        console.log(map.getBounds());
-        console.log(emojiString);
-        console.log(userLatLong);
-        M.toast({html: 'Thanks for the feedback'})
 
+        if (userLatLong == null){
+        M.toast({html: 'Please allow your device location first'})
+        }else{
+
+
+        console.log("user Lat : " + userLatLong.lat);
+        console.log("user Lng : " + userLatLong.lng);
+        console.log(emojiString);
+        formPostForSmark(userLatLong.lat,userLatLong.lng,  emojiString)
+
+        }
+        //submit users smark details
+        var southWestLat = map.getBounds()._southWest.lat;
+        var southWestLng = map.getBounds()._southWest.lng;
+        var northEastLat = map.getBounds()._northEast.lat;
+        var northEastLng = map.getBounds()._northEast.lng;
+
+        console.log("southWestLat : " + southWestLat);
+        console.log("southWestLng : " + southWestLng);
+        console.log("northEastLat : " + northEastLat);
+        console.log("northEastLng : " + northEastLng);
+
+        }
+
+
+        function formPostForSmark(userLat,userLong,emojiString){
+        var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "http://localhost:8080/like",
+        "method": "POST",
+        "headers": {
+        "content-type": "application/x-www-form-urlencoded",
+        "cache-control": "no-cache",
+        },
+        "data": {
+        "userLat": userLat,
+        "userLong": userLong,
+        "emoji": emojiString
+        }
+        }
+        $.ajax(settings).done(function (response) {
+        M.toast({html: '<span>Thanks for SMARKING</span>'})
+        console.log(response);
+        });
         }
 
     </script>
