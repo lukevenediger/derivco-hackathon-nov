@@ -33,22 +33,34 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </body>
     <div class="fixed-action-btn">
-        <a class="btn-floating btn-large blue pulse">
+        <a class="btn-floating btn-large blue pulse" id='menu'>
             <i class=" large fas fa-plus tooltipped" data-position="left" data-tooltip="Smark this place"></i>
         </a>
         <ul>            
-            <li><a class="btn-floating blue tooltipped" data-position="left" data-tooltip="Like"><i class=" far fa-thumbs-up "></i></i></a></li>
-            <li><a class="btn-floating red tooltipped" data-position="left" data-tooltip="Love"><i class="far fa-heart"></i></i></a></li>
-            <li><a class="btn-floating yellow  tooltipped" data-position="left" data-tooltip="Ha Ha"><i class="far fa-laugh-beam"></i></a></li>
-            <li><a class="btn-floating green  tooltipped" data-position="left" data-tooltip="Yay"><i class="far fa-smile-beam"></i></a></li>
-            <li><a class="btn-floating brown  tooltipped" data-position="left" data-tooltip="Wow">  <i class="far fa-surprise"></i></a></li>
-            <li><a class="btn-floating grey  tooltipped" data-position="left" data-tooltip="Sad">   <i class="far fa-sad-tear"></i></a></li>
-            <li><a class="btn-floating red  tooltipped" data-position="left" data-tooltip="Angry"> <i class="far fa-angry"></i></a></li>
+            <li><a class="btn-floating blue tooltipped" data-position="left" data-tooltip="Like" onclick="onFabClick('LIKE')"><i class=" far fa-thumbs-up "></i></i></a></li>
+            <li><a class="btn-floating red tooltipped" data-position="left" data-tooltip="Love" onclick="onFabClick('LOVE')"><i class="far fa-heart"></i></i></a></li>
+            <li><a class="btn-floating yellow  tooltipped" data-position="left" data-tooltip="Ha Ha" onclick="onFabClick('HAHA')"><i class="far fa-laugh-beam"></i></a></li>
+            <li><a class="btn-floating green  tooltipped" data-position="left" data-tooltip="Yay" onclick="onFabClick('YAY')"><i class="far fa-smile-beam"></i></a></li>
+            <li><a class="btn-floating brown  tooltipped" data-position="left" data-tooltip="Wow" onclick="onFabClick('WOW')">  <i class="far fa-surprise"></i></a></li>
+            <li><a class="btn-floating grey  tooltipped" data-position="left" data-tooltip="Sad" onclick="onFabClick('SAD')">   <i class="far fa-sad-tear"></i></a></li>
+            <li><a class="btn-floating red  tooltipped" data-position="left" data-tooltip="Angry" onclick="onFabClick('ANGRY')"> <i class="far fa-angry"></i></a></li>
         </ul>
+    </div>
+
+    <div class="tap-target" data-target="menu">
+        <div class="tap-target-content white-text">
+            <h5>Welcome to SMARK</h5>
+            <p>Add an Emotion to any place, anywhere!!</p>
+        </div>
     </div>
     <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
             integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
     crossorigin=""></script>
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -61,10 +73,19 @@
         var instances = M.Tooltip.init(elems);
         });
 
+        $(document).ready(function(){
+        $('.tap-target').tapTarget();
+        $('.tap-target').tapTarget('open');
+
+        });
+
 
         //initilize shitty map
         var map = L.map('mapid').fitWorld();
 
+        //gobal var to set users cords... not the best idea
+        var userLatLong;
+        var GobalRadius
         //add tile layer from box
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoidGVqcCIsImEiOiJjam9pY2p0N2owNzM5M29vZ3F6dTFxNGFkIn0.WPdJ1qNHeesaW9AYQboZ3Q', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -79,7 +100,8 @@
         //funtion to add current location marker to map
         function onLocationFound(e) {
         var radius = e.accuracy / 2;
-
+        userLatLong = e.latlng
+        console.log(radius);
         L.marker(e.latlng).addTo(map)
         .bindPopup("You are within " + radius + " meters from this point").openPopup();
 
@@ -88,6 +110,15 @@
         //on event location found call onLocationFound
 
         map.on('locationfound', onLocationFound);
+
+
+        function onFabClick(emojiString){
+        console.log(map.getBounds());
+        console.log(emojiString);
+        console.log(userLatLong);
+        M.toast({html: 'Thanks for the feedback'})
+
+        }
 
     </script>
 </html>
