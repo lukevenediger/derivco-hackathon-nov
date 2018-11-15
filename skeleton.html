@@ -11,6 +11,9 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
               integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
               crossorigin=""/>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+
     </head>
     <style>
         html, body, #mapid {
@@ -30,14 +33,17 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </body>
     <div class="fixed-action-btn">
-        <a class="btn-floating btn-large red">
-            <i class="large material-icons">mode_edit</i>
+        <a class="btn-floating btn-large blue pulse">
+            <i class=" large fas fa-plus tooltipped" data-position="left" data-tooltip="Smark this place"></i>
         </a>
-        <ul>
-            <li><a class="btn-floating red"><img src="https://media1.tenor.com/images/95d5652532fe5a3079b6f1064d5b90bd/tenor.gif?itemid=10474649"></a></li>
-            <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
-            <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
-            <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+        <ul>            
+            <li><a class="btn-floating blue tooltipped" data-position="left" data-tooltip="Like"><i class=" far fa-thumbs-up "></i></i></a></li>
+            <li><a class="btn-floating red tooltipped" data-position="left" data-tooltip="Love"><i class="far fa-heart"></i></i></a></li>
+            <li><a class="btn-floating yellow  tooltipped" data-position="left" data-tooltip="Ha Ha"><i class="far fa-laugh-beam"></i></a></li>
+            <li><a class="btn-floating green  tooltipped" data-position="left" data-tooltip="Yay"><i class="far fa-smile-beam"></i></a></li>
+            <li><a class="btn-floating brown  tooltipped" data-position="left" data-tooltip="Wow">  <i class="far fa-surprise"></i></a></li>
+            <li><a class="btn-floating grey  tooltipped" data-position="left" data-tooltip="Sad">   <i class="far fa-sad-tear"></i></a></li>
+            <li><a class="btn-floating red  tooltipped" data-position="left" data-tooltip="Angry"> <i class="far fa-angry"></i></a></li>
         </ul>
     </div>
     <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"
@@ -49,10 +55,16 @@
         var elems = document.querySelectorAll('.fixed-action-btn');
         var instances = M.FloatingActionButton.init(elems);
         });
-        
+
+        document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.tooltipped');
+        var instances = M.Tooltip.init(elems);
+        });
+
+
         //initilize shitty map
         var map = L.map('mapid').fitWorld();
-        
+
         //add tile layer from box
         L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoidGVqcCIsImEiOiJjam9pY2p0N2owNzM5M29vZ3F6dTFxNGFkIn0.WPdJ1qNHeesaW9AYQboZ3Q', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -61,8 +73,10 @@
         accessToken: 'pk.eyJ1IjoidGVqcCIsImEiOiJjam9pY2p0N2owNzM5M29vZ3F6dTFxNGFkIn0.WPdJ1qNHeesaW9AYQboZ3Q'
         }).addTo(map);
 
+        //request location
         map.locate({setView: true, maxZoom: 16});
 
+        //funtion to add current location marker to map
         function onLocationFound(e) {
         var radius = e.accuracy / 2;
 
@@ -71,6 +85,7 @@
 
         L.circle(e.latlng, radius).addTo(map);
         }
+        //on event location found call onLocationFound
 
         map.on('locationfound', onLocationFound);
 
