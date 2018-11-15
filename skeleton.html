@@ -22,8 +22,8 @@
         }
     </style>
     <body>
-        <nav class="blue z-depth-3  lighten-1" role="navigation">
-            <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">SMARK</a>
+        <nav class="blue  lighten-1 z-depth-5" role="navigation">
+            <div class="nav-wrapper container "><a id="logo-container" href="#" class="brand-logo">SMARK</a>
                 <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             </div>
         </nav>
@@ -42,7 +42,7 @@
             <li><a class="btn-floating red tooltipped" data-position="left" data-tooltip="Love" onclick="onFabClick('LOVE')"><i class="far fa-heart"></i></i></a></li>
             <li><a class="btn-floating yellow  tooltipped" data-position="left" data-tooltip="Ha Ha" onclick="onFabClick('HAHA')"><i class="far fa-laugh-beam"></i></a></li>
             <li><a class="btn-floating green  tooltipped" data-position="left" data-tooltip="Yay" onclick="onFabClick('YAY')"><i class="far fa-smile-beam"></i></a></li>
-            <li><a class="btn-floating brown  tooltipped" data-position="left" data-tooltip="Wow" onclick="onFabClick('WOW')">  <i class="far fa-surprise"></i></a></li>
+            <li><a class="btn-floating orange  tooltipped" data-position="left" data-tooltip="Wow" onclick="onFabClick('WOW')">  <i class="far fa-surprise"></i></a></li>
             <li><a class="btn-floating blue tooltipped" data-position="left" data-tooltip="Like" onclick="onFabClick('LIKE')"><i class=" far fa-thumbs-up "></i></i></a></li>
 
         </ul>
@@ -139,25 +139,27 @@
 
 
         function formPostForSmark(userLat,userLong,emojiString){
+        var dataObject = {latitude: userLat , longitude: userLong, emoji: emojiString }
         var settings = {
         "async": true,
         "crossDomain": true,
         "url": "http://localhost:8080/like",
         "method": "POST",
         "headers": {
-        "content-type": "application/x-www-form-urlencoded",
+        "content-type": "application/json",
         "cache-control": "no-cache",
         },
-        "data": {
-        "longitude": userLat,
-        "latitude": userLong,
-        "emoji": emojiString
+        "data": JSON.stringify(dataObject)
         }
-        }
+        console.log(settings);
         $.ajax(settings).done(function (response) {
         M.toast({html: '<span>Thanks for SMARKING</span>'})
+
         console.log(response);
         });
+
+
+      
         }
 
     </script>
