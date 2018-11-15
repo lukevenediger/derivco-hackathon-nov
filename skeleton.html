@@ -136,11 +136,11 @@
         console.log("northEastLng : " + northEastLng);
 
         }
-        formPostTest2(userLat,userLong,emojiString){
+        function formPostTest2(userLat,userLong,emojiString){
         var dataObject = {latitude: userLat , longitude: userLong, emoji: emojiString }
         $.ajax({
-        url: 'http://localhost:9000/like',
-        type: 'post',
+        url: '/like',
+        type: 'POST',
         dataType: 'json',
         contentType: 'application/json',
         success: function (data) {
